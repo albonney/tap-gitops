@@ -1,0 +1,70 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: tjwa-server.my-apps.tap.20240531161913.0.0+build.6db88c7
+spec:
+  refName: tjwa-server.my-apps.tap
+  version: 20240531161913.0.0+build.6db88c7
+  releaseNotes: |
+    Release v20240531161913.0.0+build.6db88c7 of package tjwa-server.my-apps.tap
+  template:
+    spec:
+      fetch:
+      - imgpkgBundle:
+          image: shepherd32f035246dfa9f52954e78d2.azurecr.io/tap-install/workloads/tjwa-server-my-apps-bundle@sha256:462ca568de6d1b065f7cef30074caa10aa10dc8d9bacd837fbad0eb0df277b5b
+      template:
+      - ytt:
+          paths:
+          - .
+      - kbld:
+          paths:
+          - .imgpkg/images.yml
+          - '-'
+      deploy:
+      - kapp: {}
+  valuesSchema:
+    openAPIv3:
+      type: object
+      additionalProperties: false
+      properties:
+        workload_name:
+          title: Workload name
+          type: string
+          default: ""
+        replicas:
+          title: Replicas
+          type: integer
+          default: 1
+        port:
+          title: Port
+          type: integer
+          default: 8080
+        hostname:
+          title: Hostname
+          type: string
+          default: ""
+        cluster_issuer:
+          title: Cluster Issuer
+          type: string
+          default: tap-ingress-selfsigned
+        http_route:
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            gateways:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  protocol:
+                    type: string
+                    default: ""
+                  name:
+                    type: string
+                    default: ""
+              default:
+              - protocol: https
+                name: default-gateway
+
