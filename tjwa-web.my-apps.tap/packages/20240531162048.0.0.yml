@@ -1,0 +1,33 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: tjwa-web.my-apps.tap.20240531162048.0.0+build.6db88c7
+spec:
+  refName: tjwa-web.my-apps.tap
+  version: 20240531162048.0.0+build.6db88c7
+  releaseNotes: |
+    Release v20240531162048.0.0+build.6db88c7 of package tjwa-web.my-apps.tap
+  template:
+    spec:
+      fetch:
+      - imgpkgBundle:
+          image: shepherd32f035246dfa9f52954e78d2.azurecr.io/tap-install/workloads/tjwa-web-my-apps-bundle@sha256:a23b9380c8616e50ff9f956957c42f43ac1f88e11c4250b731773a2c18f71453
+      template:
+      - ytt:
+          paths:
+          - .
+      - kbld:
+          paths:
+          - .imgpkg/images.yml
+          - '-'
+      deploy:
+      - kapp: {}
+  valuesSchema:
+    openAPIv3:
+      type: object
+      additionalProperties: false
+      properties:
+        workload_name:
+          type: string
+          default: ""
+
