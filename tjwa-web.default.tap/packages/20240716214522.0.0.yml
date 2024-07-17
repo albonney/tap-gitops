@@ -1,0 +1,34 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: tjwa-web.default.tap.20240716214522.0.0+build.6db88c7
+  labels:
+    app.kubernetes.io/part-of: tjwa-web
+spec:
+  refName: tjwa-web.default.tap
+  version: 20240716214522.0.0+build.6db88c7
+  template:
+    spec:
+      fetch:
+      - imgpkgBundle:
+          image: kapplegate.azurecr.io/alb/workloads/tjwa-web-default-bundle@sha256:f4cdf014272f8c5baba18ba5415cdff5919013f900d5fbbe088567e0fe5b74a4
+      template:
+      - ytt:
+          paths:
+          - .
+      - kbld:
+          paths:
+          - .imgpkg/images.yml
+          - '-'
+      deploy:
+      - kapp: {}
+  valuesSchema:
+    openAPIv3:
+      type: object
+      additionalProperties: false
+      properties:
+        workload_name:
+          type: string
+          default: ""
+          minLength: 1
+
